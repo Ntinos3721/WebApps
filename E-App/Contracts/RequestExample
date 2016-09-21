@@ -1,0 +1,13 @@
+
+    [DataContract]
+    public class MyGetRequest : PagedRequestBase
+    {
+        [DataMember]
+        public bool OnlyForChannel { get; set; }
+
+        [OnDeserializing]
+        private void OnDeserializing(StreamingContext context)
+        {
+            this.OnlyForChannel = true;
+        }
+    }
