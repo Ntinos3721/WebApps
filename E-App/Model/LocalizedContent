@@ -1,0 +1,152 @@
+{
+
+    [System.Diagnostics.DebuggerDisplay("{PropertyName}={PropertyValue} ({Locale})")]
+    [DataContract]
+    public class LocalizedContent
+    {
+        public static readonly string[] SupportedLocales = new string[] { ContentLocale.Greek, ContentLocale.English };
+
+        /// <summary>
+        /// Key
+        /// </summary>
+        [DataMember]
+        public int Id { get; set; }
+
+        public LocalizedContent() {
+            this.Locale = ContentLocale.Greek;
+        }
+
+        public LocalizedContent(string locale, EntityType objectType, string property, string value) {
+            this.Locale = locale;
+            this.EntityType = objectType;
+            this.PropertyName = property;
+            this.PropertyValue = value;
+        }
+
+        public LocalizedContent(string locale, int objectId, EntityType objectType, string property, EditFormInfo editFormInfo, string value) {
+            this.Locale = locale;
+            this.EntityId = objectId;
+            this.EntityType = objectType;
+            this.PropertyName = property;
+            this.PropertyValue = value;
+            this.EditFormInfo = editFormInfo;
+        }
+
+        [DataMember]
+        public string Locale { get; set; }
+        [DataMember]
+        public int? EntityId { get; set; }
+        [DataMember]
+        public EntityType EntityType { get; set; }
+        [DataMember]
+        public string PropertyName { get; set; }
+
+        private string m_PropertyValue = string.Empty;
+        [DataMember]
+        public string PropertyValue {
+            get {
+                return this.m_PropertyValue ?? string.Empty;
+            }
+            set {
+                this.m_PropertyValue = value;
+            }
+        }
+
+        [DataMember]
+        public EditFormInfo EditFormInfo { get; set; }
+
+       
+    }
+
+    [TsIgnore]
+    public class ContentLocale
+    {
+        public const string Greek = "EL";
+        public const string English = "EN";
+        public const string All = "ALL";
+    }
+
+    [DataContract]
+    public class EditFormInfo {
+        public EditFormInfo() {
+        }
+
+        public EditFormInfo(int order, string prompt) {
+            this.Order = order;
+            this.Prompt = prompt;
+            this.Template = EditFieldTemplates.Text;
+        }
+
+        public EditFormInfo(int order, string prompt, string template) {
+            this.Order = order;
+            this.Prompt = prompt;
+            this.Template = template;
+        }
+        public EditFormInfo(int order, string prompt, string template,bool required) {
+            this.Order = order;
+            this.Prompt = prompt;
+            this.Template = template;
+            this.IsRequired = required;
+        }
+        public EditFormInfo(int order, string prompt, string description, string template, bool required, int maxlength, string inputcheck, string fieldGroup) {
+            this.Order = order;
+            this.Prompt = prompt;
+            this.Description = description;
+            this.Template = template;
+            this.IsRequired = required;
+            this.MaxLength = maxlength;
+            this.InputCheck = inputcheck;
+            this.FieldGroup = fieldGroup;
+        }
+
+        [DataMember]
+        public int Order { get; set; }
+        [DataMember]
+        public string Prompt { get; set; }
+        [DataMember]
+        public string Description { get; set; }
+        [DataMember]
+        public string Template { get; set; }
+        [DataMember]
+        public bool IsRequired { get; set; }
+        [DataMember]
+        public int MaxLength { get; set; }
+        [DataMember]
+        public string InputCheck { get; set; }
+        [DataMember]
+        public string FieldGroup { get; set; }
+    }
+
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple=true, Inherited = true)]
+    public class LocalizedPropertyAttribute : Attribute {
+        public EditFormInfo EditFormInfo { get; set; }
+        public string PropertyName { get; set; }
+        public LocalizedPropertyAttribute(string propertyName, int order, string prompt, string description, string template, bool required, int maxlength)
+            : this(propertyName, order, prompt, description, template, required, maxlength, null, null)
+        {
+
+        }
+        public LocalizedPropertyAttribute(string propertyName, int order, string prompt, string description, string template, bool required, int maxlength, string propertyGroup)
+            :this(propertyName, order, prompt, description, template, required, maxlength, propertyGroup,null)
+        {
+
+        }
+        public LocalizedPropertyAttribute(string propertyName, int order, string prompt, string description, string template, bool required, int maxlength, string propertyGroup, string inputcheck)
+            : base() {
+                this.PropertyName = propertyName;
+                this.EditFormInfo = new EditFormInfo(order, prompt, description, template, required, maxlength, inputcheck, propertyGroup);
+        }
+
+        public string EntityPropertyName { get; set; }
+    }
+
+    [TsIgnore]
+    public class EditFieldTemplates {
+        public const string Text = "Text";
+        public const string TextArea = "TextArea";
+        public const string Html = "Html";
+        public const string Url = "url";
+        public const string File = "File";
+    }
+
+}
