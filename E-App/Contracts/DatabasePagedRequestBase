@@ -1,0 +1,22 @@
+//Classic pagination that returns PageNumber and results on each page
+    [DataContract]
+    public class DatabasePagedRequestBase: RequestBase
+    {
+        [DataMember(EmitDefaultValue = false)]
+        public int PageNumber { get; set; }
+
+        [DataMember(EmitDefaultValue = false)]
+        public int ResultsPerPage { get; set; }
+        
+        [DataMember(EmitDefaultValue = false)]
+        public string SearchValue { get; set; }
+
+        [DataMember]
+        public Query Query { get; set; }
+
+        [DataMember]
+        public string OrderBy { get; set; }
+
+        [DataMember]
+        public string OrderDirection { get; set; }
+    }
