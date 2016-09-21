@@ -1,0 +1,27 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
+{
+    [DataContract]
+    public class CheckoutRequest : BaseRequest
+    {
+        /// This is the primary identifier for the checkout 
+        [DataMember, MyAttribute(1, 3000)]
+        public string MyToken { get; set; }
+       
+        public int CardId { get; set; }
+        
+        public int? BillingAddressId { get; set; }}
+    }
+
+    [DataContract]
+    public class CheckoutAuthorizationResponse : ResponseBase
+    {
+        /// A url to redirect after the success
+        [DataMember(EmitDefaultValue = false)]
+        public string RedirectUrl { get; set; }
+    }
+
+}
