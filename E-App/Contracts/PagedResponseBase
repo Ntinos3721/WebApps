@@ -1,0 +1,13 @@
+[DataContract]
+    public class PagedResponseBase: ResponseBase
+    {
+        
+        public int TotalRecords { get; set; }
+        
+        
+        public int ReplyRecords { get; set; }
+
+        public bool HasMore { get; set; }
+
+        public string CurrentPageIndex { get; set; }
+    }
