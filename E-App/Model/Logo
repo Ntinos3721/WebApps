@@ -1,0 +1,25 @@
+
+    [DataContract]
+    [LocalizedProperty("Link", 1, "", "", EditFieldTemplates.Text, false, 150, null, null, EntityPropertyName = "Link")]
+    public class Logo : LocalizedEntityBase
+    {
+        [DataMember]
+        public string Name { get; set; }
+        [DataMember]
+        public BannerDimensions Dimensions { get; set; }
+        [DataMember]
+        public bool NoFollow { get; set; }
+
+        [DataMember]
+        public override EntityType Type {
+            get {
+                return EntityType.Banner;
+            }
+            set { }
+        }
+
+        [DataMember]
+        public string Link { get; set; }
+        [DataMember]
+        public string AltText { get; set; }
+    }
