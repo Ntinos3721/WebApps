@@ -1,0 +1,39 @@
+{
+    public class BusinessCard : IPersistentEntity<int>
+    {
+        [DataMember]
+        public int Id { get; set; }
+
+        [DataMember]
+        public int TypeID { get; set; }
+
+        [DataMember]
+        public string TypeName { get; set; }
+
+        [TsProperty(IsOptional = true)]
+        [IgnoreDataMember]
+        public bool IsAuthenticated { get; set; }
+
+        [DataMember]
+        public string Title { get; set; }
+
+        [DataMember]
+        public int? ExpiryMonth { get; set; }
+
+        [DataMember]
+        public int? ExpiryYear { get; set; }
+
+        [DataMember]
+        public bool IsPreferred { get; set; }
+
+        [DataMember]
+        public bool IsPrepaid {
+            get {
+                return this.CategoryId == 5000;
+            }
+            set { }
+        }
+
+        
+    }
+}
