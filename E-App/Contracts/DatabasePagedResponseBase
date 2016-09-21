@@ -1,0 +1,29 @@
+  [DataContract]
+    public class DatabasePagedResponseBase<T> : ResponseBase where T : IEntityBase
+    {
+        public DBPagedResponseBase() {
+            this.Items = new List<T>();
+        }
+
+        [DataMember]
+        public IList<T> Items { get; set; }
+
+        [DataMember]
+        public int PageIndex { get; set; }
+
+        [DataMember]
+        public int PageSize { get; set; }
+
+        [DataMember]
+        public int TotalPage { get; set; }
+
+        [DataMember]
+        public int TotalRows { get; set; }
+
+    }
+
+    public class DatabasePagedResponseMessage<T> : DBPagedResponseBase<T> where T : MyMessage {
+        [DataMember]
+        public int Unread { get; set; }
+    }
+}
