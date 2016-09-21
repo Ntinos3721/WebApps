@@ -1,0 +1,29 @@
+[AttributeUsage(AttributeTargets.Property, Inherited=true, AllowMultiple=false)]
+    public class MyCustomAttribute : Attribute
+    {
+        #region constructors
+        public MyCustomAttribute():base() {
+
+        }
+        public MyCustomAttribute(int minLength, int maxLength)
+            : this(minLength, maxLength, null, null)
+        {
+            
+        }
+
+        public MyCustomAttribute(int minLength, int maxLength, string validValues, string valueType)
+            : base()
+        {
+            this.MinLength = minLength;
+            this.MaxLength = maxLength;
+            this.ValidValues = validValues;
+            this.ValueType = valueType;
+        }
+        #endregion
+
+        public int MinLength { get; set; }
+        public int MaxLength { get; set; }
+        public string ValidValues { get; set; }
+        public string ValueType { get; set; }
+
+    }
