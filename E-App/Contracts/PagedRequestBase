@@ -1,0 +1,10 @@
+[DataContract]
+    public class PagedRequestBase: RequestBase
+    {
+        [DataMember(EmitDefaultValue = false), MyCustomAttribute(0, 250, @"+ \/ [TAB][Space] =? [LF][RC]", ImpervaTypes.LatinAdditionalCharacters)]
+        public string LastPageIndex { get; set; }
+
+
+        [DataMember(EmitDefaultValue = false)]
+        public int MaxRecords { get; set; }
+    }
