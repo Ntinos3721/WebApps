@@ -1,0 +1,22 @@
+
+{
+    [DataContract]
+    public class PDFRequest
+    {
+        public PDFRequestType PDFRequestType { get; set; }
+
+        [DataMember, ImpervaAttribute(0, 3000, @"; & + "" , () % >< \/ [TAB][SPACE] - #$:@^_ | . * !'~ []{} =? '", ImpervaTypes.ForeignLanguageAdditionalCharacters)]
+        public string Parameters { get; set; }
+    }
+
+    [DataContract]
+    public class PDFResponse
+    {
+        [DataMember(EmitDefaultValue=false)]
+        public byte[] FileContents { get; set; }
+
+        [DataMember(EmitDefaultValue=false)]
+        public string HtmlContent { get; set; }
+    }
+
+}
