@@ -1,0 +1,22 @@
+class Program
+    {
+        private static Logger logger = LogManager.GetLogger("ComplaintsNotifications");
+
+        static void Main(string[] args)
+        {
+            try
+            {
+                logger.Info("Process started");
+               
+                logger.Info("Creating csv file: {0}", filePath);
+
+                logger.Info("Process finished");
+            }
+            catch (Exception ex)
+            {
+                logger.Error("Error occured, Message: {0}, Stack: {1}", ex.Message, ex.StackTrace);
+            }
+
+            Console.ReadLine();
+        }
+}
