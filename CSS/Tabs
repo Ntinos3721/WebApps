@@ -1,0 +1,177 @@
+https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta
+
+.htab {
+    margin: 0 auto 1em;
+    display: inline-block;
+}
+
+.htab div {
+    background-color: #EAEFF2;
+    margin-top: 0;
+    /* border: 0 solid #E5EAEF; */
+    border: 0 solid rgba(212, 221, 228, .25);
+    padding: 12px;
+    position: relative;
+    /*z-index: 9;*/
+    word-wrap: break-word;
+    margin-left:40px;
+}
+
+.htab ul li {
+    background-color: #F1F6F8!important;
+    border: 1px solid #F1F6F8;
+    /* border: 1px solid rgba(212, 221, 228, 0); */
+    border-radius: 0;
+    color: #4D4E53;
+    display: inline;
+    height: 32px;
+    list-style-type: none;
+    /* margin: auto; */
+    /* opacity: .75; */
+    position: relative;
+    padding: 5px 6px 3px;
+    text-align: left;
+    /*font-family: 'Open Sans Light',Helvetica,Arial,sans-serif;*/
+    font-size: 14px;
+    font-weight: 200;
+}
+
+.htab ul li.selected {
+    background-color: #EAEFF2!important;
+    border: 0 solid #F4F6F8;
+    color: #000000;
+    /* border: 0 solid rgba(212, 221, 228, .25); */
+    border-top: 2px solid #D4DDE4;
+    font-weight: 700;
+    /* opacity: 1!important; */
+    /* -ms-filter: unqoute("alpha(Opacity=100)"); */
+    /* filter: unqoute("alpha(Opacity=100)"); */
+    padding-top: 4px;
+    position: relative;
+    /* z-index: 10; */
+}
+
+.htab ul li a {
+    padding: 2px 18px 4px;
+}
+
+.htab ul li a:hover {
+    text-decoration:underline;
+}
+
+　
+table.compat-table {
+    border: 1px solid #F1F6F8;
+    border-collapse: collapse;
+    border-color: transparent;
+    margin: 0;
+}
+
+table.compat-table td {
+    border: 5px solid #F1F6F8;
+    background-color:white;
+    padding: 2px 4px 8px;
+    font-size: 16px;
+    font-weight: 200;
+    line-height: 100%;
+}
+
+　
+<div class="htab">
+    <ul>
+        <li><a>Desktop</a></li>
+        <li><a>Mobile</a></li>
+    </ul>
+    <div id="compat-desktop" style="display: block; ">
+        <table class="compat-table">
+            <tbody>
+                <tr>
+                    <th>Feature</th>
+                    <th>Chrome</th>
+                    <th>Firefox (Gecko)</th>
+                    <th>Internet Explorer</th>
+                    <th>Opera</th>
+                    <th>Safari</th>
+                </tr>
+                <tr>
+                    <td>Basic support</td>
+                    <td><span title="Please update this with the earliest version of support." style="color: #888;">(Yes)</span></td>
+                    <td>1.0 (1.7 or earlier)</td>
+                    <td><span title="Please update this with the earliest version of support." style="color: #888;">(Yes)</span></td>
+                    <td><span title="Please update this with the earliest version of support." style="color: #888;">(Yes)</span></td>
+                    <td><span title="Please update this with the earliest version of support." style="color: #888;">(Yes)</span></td>
+                </tr>
+                <tr>
+                    <td><code>name="referrer"</code></td>
+                    <td>17</td>
+                    <td><a href="/en-US/Firefox/Releases/36" title="Released on 2015-02-24.">36.0</a> (36.0) [1]</td>
+                    <td><span title="Compatibility unknown; please update this." style="color: rgb(255, 153, 0);">?</span></td>
+                    <td><span title="Compatibility unknown; please update this." style="color: rgb(255, 153, 0);">?</span></td>
+                    <td><span title="Compatibility unknown; please update this." style="color: rgb(255, 153, 0);">?</span></td>
+                </tr>
+                <tr>
+                    <td>Constrained to values listed under referrer (as specified in the spec.)</td>
+                    <td>46.0</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="compat-mobile" style="display: none; ">
+        <table class="compat-table">
+            <tbody>
+                <tr>
+                    <th>Feature</th>
+                    <th>Android</th>
+                    <th>Android Webview</th>
+                    <th>Firefox Mobile (Gecko)</th>
+                    <th>IE Mobile</th>
+                    <th>Opera Mobile</th>
+                    <th>Safari Mobile</th>
+                    <th>Chrome for Android</th>
+                </tr>
+                <tr>
+                    <td>Basic support</td>
+                    <td><span title="Please update this with the earliest version of support." style="color: #888;">(Yes)</span></td>
+                    <td><span title="Please update this with the earliest version of support." style="color: #888;">(Yes)</span></td>
+                    <td>1.0 (1.0)</td>
+                    <td><span title="Please update this with the earliest version of support." style="color: #888;">(Yes)</span></td>
+                    <td><span title="Please update this with the earliest version of support." style="color: #888;">(Yes)</span></td>
+                    <td><span title="Please update this with the earliest version of support." style="color: #888;">(Yes)</span></td>
+                    <td><span title="Please update this with the earliest version of support." style="color: #888;">(Yes)</span></td>
+                </tr>
+                <tr>
+                    <td><code>name="referrer"</code></td>
+                    <td><span title="Compatibility unknown; please update this." style="color: rgb(255, 153, 0);">?</span></td>
+                    <td><span title="Please update this with the earliest version of support." style="color: #888;">(Yes)</span></td>
+                    <td>36.0 (36.0) [1]</td>
+                    <td><span title="Compatibility unknown; please update this." style="color: rgb(255, 153, 0);">?</span></td>
+                    <td><span title="Compatibility unknown; please update this." style="color: rgb(255, 153, 0);">?</span></td>
+                    <td><span title="Compatibility unknown; please update this." style="color: rgb(255, 153, 0);">?</span></td>
+                    <td><span title="Please update this with the earliest version of support." style="color: #888;">(Yes)</span></td>
+                </tr>
+                <tr>
+                    <td>Constrained to values listed under referrer (as specified in the spec.)</td>
+                    <td><span style="color: #f00;">No&nbsp;support</span></td>
+                    <td>46.0</td>
+                    <td><span title="Compatibility unknown; please update this." style="color: rgb(255, 153, 0);">?</span></td>
+                    <td><span title="Compatibility unknown; please update this." style="color: rgb(255, 153, 0);">?</span></td>
+                    <td><span title="Compatibility unknown; please update this." style="color: rgb(255, 153, 0);">?</span></td>
+                    <td><span title="Compatibility unknown; please update this." style="color: rgb(255, 153, 0);">?</span></td>
+                    <td>46.0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".htab ul li").click(function () {
+            $(this).addClass("selected").siblings().removeClass("selected");
+        });
+    });
+</script
