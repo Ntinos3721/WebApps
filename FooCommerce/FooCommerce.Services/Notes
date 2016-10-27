@@ -1,0 +1,2 @@
+This project contains a set of core services, business logic, validations or calculations related with the data, if needed. 
+Some people call it Business Access Layer (BAL).
