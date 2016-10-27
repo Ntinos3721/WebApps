@@ -1,0 +1,2 @@
+The Core project contains a set of core classes for commerce, 
+such as caching, events, helpers, and business objects (for example, Order and Customer entities).
