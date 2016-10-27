@@ -1,0 +1,49 @@
+using FooCommerce.Core.Caching;
+using FooCommerce.Core.Data;
+using FooCommerce.Core.Domain;
+using FooCommerce.DataAccess;
+using FooCommerce.Services.Contracts;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FooCommerce.Services
+{
+    public partial class ProductService : IProductService
+    {
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : product ID
+        /// </remarks>
+        private const string PRODUCTS_BY_ID_KEY = "Foo.product.id-{0}";
+
+        private readonly IProductRepository _productRepository;
+        private readonly ICacheManager _cacheManager;
+
+        public ProductService(ICacheManager cacheManager,
+            IProductRepository productRepository)
+        {
+            this._cacheManager = cacheManager;
+            this._productRepository = productRepository;
+        }
+
+        #region IProductService Members
+
+        public GetProductResponse GetProductById(GetProductRequest request)
+        {
+            if (request.ProductID == 0)
+                return null;
+
+            string key = string.Format(PRODUCTS_BY_ID_KEY, request.ProductID);
+            Product product = _cacheManager.Get(key, () => _productRepository.GetById(request.ProductID));
+
+            return new GetProductResponse() { Product = product };
+        }
+
+        #endregion
+    }
+}
