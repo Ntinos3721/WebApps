@@ -1,0 +1,16 @@
+using FooCommerce.Core.Domain;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FooCommerce.Core.Data
+{
+    public interface IProductRepository
+    {
+        Product GetById(object id);
+        Product GetProductInfo(int productID);
+        IQueryable<Product> GetProductsByName(string name);
+    }
+}
