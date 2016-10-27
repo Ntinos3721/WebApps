@@ -1,0 +1,89 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using FooCommerce.Core.Domain;
+using FooCommerce.Core.Data;
+
+namespace FooCommerce.DataAccess
+{
+    public class ProductRepository : IProductRepository, IRepository<Product>
+    {
+        //readonly EFContext _efContext;
+        public ProductRepository()
+        {
+            //_efContext = new EFContext();
+        }
+
+        #region IProductRepository Members
+
+        public Product GetProductInfo(int productID)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+　
+        #region IRepository<Product> Members
+
+        public Product GetById(object id)
+        {
+            return new Product() { Name = "NokiaX2" };
+        }
+
+        public void Insert(Product entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Insert(IEnumerable<Product> entities)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(Product entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(IEnumerable<Product> entities)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(Product entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(IEnumerable<Product> entities)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IQueryable<Product> Table
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public IQueryable<Product> TableNoTracking
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        #endregion
+
+        #region IProductRepository Members
+
+　
+        public IQueryable<Product> GetProductsByName(string name)
+        {
+            //FYI: do here the mapping to business object ...
+            throw new NotImplementedException();
+        }
+
+        #endregion
+    }
+}
