@@ -1,0 +1,40 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using FooCommerce.Core.Domain;
+using FooCommerce.Core.Infrastructure;
+using FooCommerce.Core.Data;
+
+namespace FooCommerce.DataAccess
+{
+    public class ProductRepository : EfRepository<Product>, IProductRepository
+    //public class ProductRepository : IProductRepository, IRepository<Product>
+    {
+        private IDbContext _context;
+        public ProductRepository(IDbContext context)
+            : base(context)
+        {
+            //_efContext = new EFContext();
+            _context = context;
+        }
+
+　
+　
+        #region IProductRepository Members
+
+　
+        public Product GetProductInfo(int productID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IQueryable<Product> GetProductsByName(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+    }
+}
