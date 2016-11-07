@@ -1,1 +1,11 @@
 This is an attempt to split an application to separate layers
+
+
+Repository vs. Domain Model vs. Data Mapper
+http://www.bradoncode.com/blog/2013/08/repository-vs-domain-model-vs-data.html
+
+Creating a Data Repository using Dapper: 10 Years of .Net Compressed into Weeks #12
+http://www.bradoncode.com/blog/2012/12/creating-data-repository-using-dapper.html
+
+Dapper Repository Tutorial
+http://www.bradoncode.com/blog/2013/05/orms-don-reinvent-wheel.html
