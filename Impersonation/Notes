@@ -1,0 +1,15 @@
+domainUsername = "";
+            System.Security.Principal.WindowsIdentity pageIdentity = (System.Security.Principal.WindowsIdentity)this.Page.User.Identity;
+            domainUsername = pageIdentity.Name;
+            this.CurUser.ImpersonatorUser_Id = domainUsername;
+            //domainUsername = pageIdentity.Name.Substring(pageIdentity.Name.IndexOf('\\') + 1);
+            if (SessionManager.GetParameter<string>("Impersonate") != null)
+            {
+                EmployeeEval.BLL.Audit.Insert(System.Guid.NewGuid(), "", domainUsername, this.Request.ServerVariables["REMOTE_HOST"], DateTime.Now, "1111", "", "", SessionManager.GetParameter<string>("Impersonate"), string.Format("Ο χρήστης υποδύεται τον χρήστη {0}", SessionManager.GetParameter<string>("Impersonate")), "");
+                domainUsername = SessionManager.GetParameter<string>("Impersonate");
+                if (domainUsername.IndexOf("\\") <= 0)
+                {
+                    domainUsername = "bank\\" + domainUsername.Trim();
+                }
+            }
+            return pageIdentity.ImpersonationLevel == System.Security.Principal.TokenImpersonationLevel.Impersonation;
