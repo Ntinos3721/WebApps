@@ -1,0 +1,72 @@
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace EncryptorDecryptor
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string file = @"C:\SPS\EncryptorDecryptor\bin\Release\EncryptorDecryptor.exe.config";
+
+            //Encrypt(file);
+
+            Decrypt(file);
+        }
+
+        private static void Decrypt(string file)
+        {
+            ExeConfigurationFileMap configMap = new ExeConfigurationFileMap();
+            configMap.ExeConfigFilename = file;
+
+            System.Configuration.Configuration config = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
+            UnProtectSection(config, "appSettings");
+
+            config.Save(ConfigurationSaveMode.Full);
+        }
+
+        private static void UnProtectSection(Configuration config, string sectionName)
+        {
+            ConfigurationSection section = config.GetSection(sectionName);
+            if (section != null && section.SectionInformation != null
+                //&& !section.SectionInformation.IsProtected
+                && !section.SectionInformation.IsLocked)
+            {
+                section.SectionInformation.UnprotectSection();
+                section.SectionInformation.ForceSave = true;
+            }
+        }
+
+        private static void Encrypt(string file)
+        {
+            ExeConfigurationFileMap configMap = new ExeConfigurationFileMap();
+            configMap.ExeConfigFilename = file;
+
+            System.Configuration.Configuration config = ConfigurationManager.OpenMappedExeConfiguration(configMap, ConfigurationUserLevel.None);
+            ProtectSection(config, "appSettings");
+            //ProtectSection(config, "connectionStrings");
+
+            //ConfigurationSectionGroup MySettingsGroup = config.GetSectionGroup("applicationSettings");
+            //if (MySettingsGroup != null)
+                //foreach (ConfigurationSection cs in MySettingsGroup.Sections)
+
+            config.Save(ConfigurationSaveMode.Full);
+        }
+
+        static void ProtectSection(Configuration config, string sectionName)
+        {
+            ConfigurationSection section = config.GetSection(sectionName);
+            if (section != null && section.SectionInformation != null 
+                && !section.SectionInformation.IsProtected 
+                && !section.SectionInformation.IsLocked)
+            {
+                section.SectionInformation.ProtectSection("RsaProtectedConfigurationProvider");
+                section.SectionInformation.ForceSave = true;
+            }
+        }
+    }
+}
