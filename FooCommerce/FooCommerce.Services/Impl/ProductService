@@ -1,7 +1,8 @@
 using FooCommerce.Core.Caching;
 using FooCommerce.Core.Data;
-using FooCommerce.Core.Domain;
+using FooCommerce.Core.POCO;
 using FooCommerce.DataAccess;
+using FooCommerce.Domain;
 using FooCommerce.Services.Contracts;
 using System;
 using System.Collections.Generic;
@@ -41,7 +42,14 @@ namespace FooCommerce.Services
             string key = string.Format(PRODUCTS_BY_ID_KEY, request.ProductID);
             Product product = _cacheManager.Get(key, () => _productRepository.GetById(request.ProductID));
 
-            return new GetProductResponse() { Product = product };
+            return new GetProductResponse() {
+                Product = new ProductItem() {  
+                    Name = product.Name,
+                    ShortDescription = product.ShortDescription,
+                    FullDescription = product.FullDescription,
+                    IsValid = product.IsValid
+                }
+            };
         }
 
         #endregion
