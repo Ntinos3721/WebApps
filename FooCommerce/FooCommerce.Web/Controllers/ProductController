@@ -27,9 +27,17 @@ namespace FooCommerce.Web.Controllers
 
         public ActionResult GetProduct()
         {
-            //var product = this.productService.GetProductById(100);
+            var response = this.productService.GetProductById(new Services.Contracts.GetProductRequest()
+                {
+                    ProductID = 100
+                });
 
-            var viewModel = new ProductViewModel() { ProductName = "todo" };
+            ProductItem productItem = response.Product;
+
+            var products = new List<ProductItem>();
+            products.Add(productItem);
+
+            var viewModel = new ProductViewModel() { Products = products };
 
             return View("~/Views/Product.cshtml", viewModel);
         }
