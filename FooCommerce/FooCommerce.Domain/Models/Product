@@ -1,0 +1,37 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FooCommerce.Domain
+{
+    public class Product : EntityBase
+    {
+        /// <summary>
+        /// Gets or sets the product type identifier
+        /// </summary>
+        public int ProductTypeId { get; set; }
+        public string Name { get; set; }
+        /// <summary>
+        /// Gets or sets the short description
+        /// </summary>
+        public string ShortDescription { get; set; }
+        /// <summary>
+        /// Gets or sets the full description
+        /// </summary>
+        public string FullDescription { get; set; }
+        protected override void Validate()
+        {
+            if (string.IsNullOrEmpty(Name))
+            {
+                ValidationErrors.Add("Name");
+            }
+
+            //if (!PossibleAnswers.IsValid)
+            //{
+            //    ValidationErrors.AddRange(PossibleAnswers.ValidationErrors.Items);
+            //}
+        }
+    }
+}
