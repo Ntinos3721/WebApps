@@ -9,3 +9,32 @@ http://www.bradoncode.com/blog/2012/12/creating-data-repository-using-dapper.htm
 
 Dapper Repository Tutorial
 http://www.bradoncode.com/blog/2013/05/orms-don-reinvent-wheel.html
+
+
+Project References
+-------------------
+FooCommerce.Core
+  - FooCommerce.Domain
+ 
+FooCommerce.DataAccess
+  - EntityFramework
+  - FooCommerce.Core
+  - FooCommerce.Domain
+  
+FooCommerce.Domain
+No project references.
+
+FooCommerce.Services
+  - FooCommerce.Core
+  - FooCommerce.DataAccess
+  - FooCommerce.Domain
+  
+
+FooCommerce.Web
+  - FooCommerce.Core
+  - FooCommerce.Services
+  - FooCommerce.Web.Framework
+  
+FooCommerce.Web.Framework
+  - FooCommerce.Services
+
