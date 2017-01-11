@@ -1,0 +1,16 @@
+This is just a simple object that just transfers data with no business logic
+
+public class ProductItem
+    {
+        public int ProductTypeId { get; set; }
+        public string Name { get; set; }
+        /// <summary>
+        /// Gets or sets the short description
+        /// </summary>
+        public string ShortDescription { get; set; }
+        /// <summary>
+        /// Gets or sets the full description
+        /// </summary>
+        public string FullDescription { get; set; }
+        public bool IsValid { get; set; }
+    }
