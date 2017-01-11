@@ -9,7 +9,7 @@ using FooCommerce.Core.Data;
 
 namespace FooCommerce.DataAccess
 {
-    public class ProductRepository : EfRepository<Product>, IProductRepository
+    public class ProductRepository : EfRepository<ProductDataObject>, IProductRepository
     //public class ProductRepository : IProductRepository, IRepository<Product>
     {
         private IDbContext _context;
@@ -27,6 +27,8 @@ namespace FooCommerce.DataAccess
 　
         public Product GetProductInfo(int productID)
         {
+            /TODO: Mapping from data access entity to domain entity
+            
             throw new NotImplementedException();
         }
 
