@@ -1,0 +1,247 @@
+
+
+namespace Myproject.Web.Common
+{
+    public static class ProcessRequestHelper
+    {
+        public static async Task<MpiRequestModel> GetRequestViewModel(string SessionId, string merchantID, string merchantPassword, Guid paymentId, string pan, int expiryMonth, int expiryYear, decimal amount, string successUrl, string failUrl, string description = "", string merchantInfoText = "", int? installments = null, int? recurFreq = null, DateTime? recurEnd = null, int currency, int exponent, int deviceCategory = 0)
+        {
+            if (successUrl.Length > 250)
+            {
+                throw new ApplicationException("Success url is more than 250 chars");
+            }
+            if (failUrl.Length > 250)
+            {
+                throw new ApplicationException("Success url is more than 250 chars");
+            }
+
+            if (merchantInfoText != null && merchantInfoText.Length > 254)
+            {
+                Logger.Warn(String.Format("Merchant message is longer than 254 chars. Triming occured. Payment id: {0}", paymentId));
+                merchantInfoText = merchantInfoText.Substring(0, 254);
+            }
+            if (description != null && description.Length > 125)
+            {
+                Logger.Warn(String.Format("Payment description message is longer than 125 chars. Triming occured. Payment id: {0}", paymentId));
+                description = description.Substring(0, 125);
+            }
+
+            // Get only last 2 digit from year
+            expiryYear = expiryYear % 100;
+            var output = new MpiRequestModel()
+            {
+                description = description,
+                deviceCategory = deviceCategory,
+                currency = currency,
+                expiry = string.Format("{0:d2}{1:d2}", expiryYear, expiryMonth),
+                exponent = exponent,
+                failUrl = failUrl,
+                installments = installments,
+                MD = merchantInfoText,
+                merchantID = merchantID,
+                MerchantServerUrl = Config.CardLinkMerchantServerUrl,
+                okUrl = successUrl,
+                pan = pan,
+                purchAmount = ConvertAmount(amount, exponent),
+                version = Config.CardLinkMPIRequestVersion,
+                xid = paymentId.ToXid()
+            };
+            if (recurFreq.HasValue)
+            {
+                if (installments.HasValue)
+                {
+                    throw new ApplicationException("recurFreq can not be set when installments are specified!");
+                }
+                if (!recurEnd.HasValue)
+                {
+                    throw new ApplicationException("recurEnd must be specified if recurFreq is specified");
+                }
+                output.recurFreq = recurFreq.Value;
+                output.recurEnd = recurEnd.Value.ToString("yyyyMMdd");
+            }
+            output.ComputeDigest(merchantPassword);
+
+            // Store the request that is about to be send
+            var request = new UpdateMPIInfoRequest()
+            {
+                Id = paymentId,
+                MPIRequestPayload = JsonConvert.SerializeObject(output),
+                SessionID = SessionId,
+                ActivityDateTime = string.Format("{0:dd/MM/yyyy HH:mm:ss}", System.DateTime.UtcNow),
+                UniqueIdentifier = Guid.NewGuid().ToString()
+            };
+            request.Status = Myproject.MPIStatus.Pending;
+            var result = await SendUpdateRequest(request);
+            if (!result)
+            {
+                throw new ApplicationException(String.Format("Failed to store request for payment with id {0}", paymentId));
+            }
+
+            return output;
+        }
+
+
+        private static byte[] XidPadding = new byte[] { 0x0, 0x0, 0x0, 0x0 };
+        /// <summary>
+        /// xid is a 20 byte, base64 encoded string
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static string ToXid(this Guid id)
+        {
+            // Guid is 16 bytes
+            var output = new List<byte>(id.ToByteArray());
+            output.AddRange(XidPadding);
+            return System.Convert.ToBase64String(output.ToArray());
+        }
+
+        public static Guid GuidFromXid(this string xid)
+        {
+            var bytes = Convert.FromBase64String(xid);
+            if (bytes.Length != 20)
+            {
+                throw new ApplicationException(String.Format("{0} is not a valid 20byte xid", xid));
+            }
+            if (bytes[16] != 0x0 || bytes[17] != 0x0 || bytes[18] != 0x0 || bytes[19] != 0x0)
+            {
+                throw new ApplicationException(String.Format("{0} xid has invalid padding", xid));
+            }
+            byte[] guidBytes = new byte[16];
+            Array.Copy(bytes, guidBytes, guidBytes.Length);
+            return new Guid(guidBytes);
+        }
+
+
+        private static string ConvertAmount(decimal amount, int exponent)
+        {
+            var exponentFix = (decimal)Math.Pow(10, exponent); // 100 for 2 (aka EUR case)
+            return ((int)Math.Round(amount * exponentFix, 0)).ToString();
+        }
+
+        internal static string ComputeDigest(string input)
+        {
+            System.Security.Cryptography.SHA1 sha = new System.Security.Cryptography.SHA1CryptoServiceProvider();
+            byte[] hashValue = sha.ComputeHash(System.Text.Encoding.UTF8.GetBytes(input));
+            return System.Convert.ToBase64String(hashValue);
+        }
+
+        private static string _webApiBaseUrl = Config.ServicesUrl;
+        private static string _updateMpi = @"xxx.svc/UpdateMPIInfo";
+        private static string _getMpi = @"xxx.svc/GetMPIInfo";
+
+        public static async Task<bool> ProcessMpiResponse(string SessionId, MpiResponseModel mpiResponse, bool success)
+        {
+            var paymentId = mpiResponse.xid.GuidFromXid();
+
+            var request = new UpdateMPIInfoRequest()
+            {
+                Id = paymentId,
+                MPIResponsePayload = JsonConvert.SerializeObject(mpiResponse),
+                SessionID = SessionId,
+                ActivityDateTime = string.Format("{0:dd/MM/yyyy HH:mm:ss}", System.DateTime.UtcNow),
+                UniqueIdentifier = Guid.NewGuid().ToString()
+            };
+            if (!success)
+            {
+                request.Status = Myproject.MPIStatus.Failed;
+                var updateResult = await SendUpdateRequest(request);
+                if (!updateResult)
+                    Logger.Warn(string.Format("Failed to update the failed 3d secure payment with id {0}", paymentId));
+                return false;
+            }
+            else
+            {
+                switch (mpiResponse.mdStatus)
+                {
+                    case 5:
+                        if (mpiResponse.veresEnrolledStatus != "Y")
+                        {
+                            request.Status = Myproject.MPIStatus.Failed;
+                        }
+                        else
+                        {
+                            request.Status = Myproject.MPIStatus.Successfull;
+                        }
+                        break;
+                    case 6:
+                        if (string.IsNullOrEmpty(mpiResponse.veresEnrolledStatus))
+                        {
+                            request.Status = Myproject.MPIStatus.Failed;
+                        }
+                        else
+                        {
+                            request.Status = Myproject.MPIStatus.Successfull;
+                        }
+                        break;
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                        request.Status = Myproject.Mobile.ServiceContracts.Generic.MPIStatus.Successfull;
+                        break;
+                    case 0:
+                    case 7:
+                    case 8:
+                    case 9:
+                        request.Status = Myproject.MPIStatus.Failed;
+                        break;
+                    default:
+                        // If it's an unknown status, then fail!
+                        request.Status = Myproject.MPIStatus.Failed;
+                        break;
+                }
+
+
+                var tempStoreResult = await SendUpdateRequest(request);
+                return tempStoreResult && request.Status == Myproject.MPIStatus.Successfull;
+            }
+
+        }
+
+
+        public static async Task<MPIInfo> GetStoredRequest(Guid id, string sessionId)
+        {
+            var request = new GetMPIInfoRequest()
+            {
+                Id = id,
+                SessionID = sessionId,
+                ActivityDateTime = string.Format("{0:dd/MM/yyyy HH:mm:ss}", System.DateTime.UtcNow),
+                UniqueIdentifier = Guid.NewGuid().ToString()
+            };
+            return await SendGetRequest(request);
+        }
+
+        private static async Task<MPIInfo> SendGetRequest(GetMPIInfoRequest request)
+        {
+
+
+            // Add default request info
+            WebApiProxy.PrepareRequest(request);
+
+            WebApiProxy proxy = new WebApiProxy(_webApiBaseUrl + _getMpi);
+            var response = await proxy.HttpRequestAsync<GetMPIInfoRequest, GetMPIInfoResponse>(request);
+            if (response != null && response.ResultCode == Myproject.Mobile.ServiceContracts.Generic.GenericTypes.ResultCodeType.OK)
+            {
+                return response.MPIInfo;
+            }
+            return null;
+        }
+
+        private static async Task<bool> SendUpdateRequest(UpdateMPIInfoRequest request)
+        {
+
+
+            // Add default request info
+            WebApiProxy.PrepareRequest(request);
+
+            WebApiProxy proxy = new WebApiProxy(_webApiBaseUrl + _updateMpi);
+            var response = await proxy.HttpRequestAsync<UpdateMPIInfoRequest, UpdateMPIInfoResponse>(request);
+            if (response != null)
+            {
+                return response.ResultCode == Myproject.Mobile.ServiceContracts.Generic.GenericTypes.ResultCodeType.OK;
+            }
+            return false;
+        }
+
+    }
+}
